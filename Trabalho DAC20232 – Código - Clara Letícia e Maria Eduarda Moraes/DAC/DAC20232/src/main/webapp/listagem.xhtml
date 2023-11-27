@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+     
+<h:head>
+    <title>Listagem de Jogadas</title>
+</h:head>
+<h:body>
+     <h:form>
+        <p:panel header="Lista de Jogadas">
+            <p:messages id="messages" showDetail="true" closable="true">
+                <p:autoUpdate/>
+            </p:messages>
+                <p:dataTable value="#{jogoBean.getJogos()}" var="jogo">
+                <p:column headerText="ID"><h:outputText value="#{jogo.id}" /></p:column>
+                <p:column headerText="Time 1"><h:outputText value="#{jogo.time1}" /></p:column>
+                <p:column headerText="Time 2"><h:outputText value="#{jogo.time2}" /></p:column>
+                <p:column headerText="Gols Time 1"><h:outputText value="#{jogo.golsTime1}" /></p:column>
+                <p:column headerText="Gols Time 2"><h:outputText value="#{jogo.golsTime2}" /></p:column>
+                <p:column headerText="Data"><h:outputText value="#{jogo.dataPartida}" /></p:column>
+                <p:column headerText="Resultado"><h:outputText value="#{jogo.resultado}" /></p:column>
+                
+                <p:column headerText="Editar">
+                    <f:facet name="header">Ação</f:facet>
+                    <p:commandButton value="Editar" oncomplete="PF('editarDialog').show();" 
+                                     action="#{jogoBean.carregarJogadaParaEdicao(jogo.id)}" style="background-color: black; color: white; border: 1px solid black;" />
+               	</p:column>
+                <p:column headerText="">
+                    <p:commandButton value="Excluir" action="#{jogoBean.excluirJogada(jogo.id)}" style="background-color: black; color: white; border: 1px solid black;" />
+                </p:column>
+            </p:dataTable>
+            
+			<p:commandButton value="Voltar para Cadastro" action="index" style="background-color: black; color: white; border: 1px solid black;" />
+            
+            </p:panel>
+			</h:form>
+			
+			<p:dialog id="editarDialog" header="Editar Jogadores" widgetVar="editarDialog" modal="true" resizable="false" dynamic="true">
+    <h:form>
+        <h:panelGrid columns="2">
+            <h:outputLabel value="Time 1:  " />
+            <h:inputText value="#{jogoBean.jogadaEditavel.time1}" />
+            <h:outputLabel value="Time 2:" />
+            <h:inputText value="#{jogoBean.jogadaEditavel.time2}" />
+        </h:panelGrid>
+
+         <div style="text-align: center; margin-top: 10px;">
+            <p:commandButton value="Salvar Edições" action="#{jogoBean.salvarEdicao}"
+                 oncomplete="PF('editarDialog').hide();"
+                style="background-color: black; color: white;" />
+        </div>
+    </h:form>
+</p:dialog>
+	<p:dataTable value="#{jogoBean.calcularEstatisticas().entrySet()}" var="estatisticas">
+    <p:column headerText="TIME">
+        <h:outputText value="#{estatisticas.key}" />
+    </p:column>
+    <p:column headerText="VT">
+        <h:outputText value="#{estatisticas.value}" />
+    </p:column>
+    <p:column headerText="DT">
+    <h:outputText value="#{jogo.calcularDerrotas()}" />
+</p:column>´
+<p:column headerText="GM">
+    <h:outputText value="#{jogo.calcularGolsMarcados()}" />
+</p:column>
+<p:column headerText="GS">
+    <h:outputText value="#{jogo.calcularGolsSofridos()}" />
+</p:column>
+</p:dataTable>
+			
+    <h:link outcome="index.xhtml" value="Voltar para Cadastro" style="color: white; text-decoration: none; margin-top: 10px; display: block;" />
+</h:body>
+</html>
